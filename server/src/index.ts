@@ -1,0 +1,27 @@
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import { AppDataSource } from './data-source.js';
+import { authRouter } from './routes/auth.js';
+import { proposalsRouter } from './routes/proposals.js';
+import { votesRouter } from './routes/votes.js';
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+app.use('/auth', authRouter);
+app.use('/proposals', proposalsRouter);
+app.use('/votes', votesRouter);
+
+const PORT = process.env.PORT || 3000;
+
+AppDataSource.initialize()
+  .then(() => {
+    app.listen(PORT, () => console.log(`API rodando na porta ${PORT}`));
+  })
+  .catch((err) => {
+    console.error('Erro ao inicializar DataSource', err);
+    process.exit(1);
+  });
