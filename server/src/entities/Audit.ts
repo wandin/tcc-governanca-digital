@@ -6,17 +6,17 @@ export class Audit {
   id!: string;
 
   @Column()
-  entidade!: string; // 'Voto' | 'Proposta' | 'Sessao'
+  entidade!: string;
 
   @Column()
-  acao!: string; // 'CRIAR' | 'ENCERRAR' | 'REGISTRAR_VOTO'
+  acao!: string;
 
-  @Column()
+  @Column({ type: 'text' })
   dadosHash!: string;
 
-  @CreateDateColumn()
-  timestamp!: Date;
-
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   txBlockchainId!: string | null;
+
+  @CreateDateColumn()
+  criadoEm!: Date;
 }

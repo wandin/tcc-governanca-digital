@@ -1,29 +1,32 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Proposal } from './Proposal.js';
 
-export type EscolhaVoto = 'SIM' | 'NAO' | 'ABSTENCAO';
+export enum EscolhaVoto {
+  SIM = 'SIM',
+  NAO = 'NAO',
+  ABSTENCAO = 'ABSTENCAO',
+}
 
 @Entity()
 export class Vote {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @ManyToOne(() => Proposal, { nullable: false })
-  @JoinColumn({ name: 'propostaId' })
-  proposta!: Proposal;
-
   @Column()
   propostaId!: string;
 
-  @Column()
-  hashEleitor!: string; // anonimização
+  @ManyToOne(() => Proposal, (proposal) => proposal.id, { onDelete: 'CASCADE' })
+  proposta!: Proposal;
 
-  @Column({ type: 'varchar' })
+  @Column()
+  hashEleitor!: string;
+
+  @Column({
+    type: 'enum',
+    enum: EscolhaVoto,
+  })
   escolha!: EscolhaVoto;
 
-  @CreateDateColumn()
-  timestamp!: Date;
-
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   txBlockchainId!: string | null;
 }

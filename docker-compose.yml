@@ -1,7 +1,7 @@
-version: "3.9"
 services:
   db:
     image: postgres:15
+    restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
@@ -10,8 +10,10 @@ services:
       - "5432:5432"
     volumes:
       - dbdata:/var/lib/postgresql/data
+
   api:
     build: ./server
+    restart: unless-stopped
     depends_on:
       - db
     environment:
@@ -24,12 +26,17 @@ services:
       DB_NAME: governanca
     ports:
       - "3000:3000"
-    command: sh -c "npm install && npm run dev"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
   adminer:
     image: adminer
+    restart: unless-stopped
     depends_on:
       - db
     ports:
       - "8080:8080"
+
 volumes:
   dbdata:

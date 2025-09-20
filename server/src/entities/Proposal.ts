@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class Proposal {
@@ -15,6 +15,6 @@ export class Proposal {
   criadaEm!: Date;
 
   // Sessão de votação mínima: representada por string (id) para simplificar.
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   sessaoId!: string | null;
 }
